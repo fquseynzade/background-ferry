@@ -34,3 +34,7 @@ No physical headphone-unplug test, ARM64 device test, Windows 10 device test, ex
 ## 0.2.1 application identity
 
 Six additional app tests verify real EXE icon extraction, executable descriptions, frozen cross-thread image data, missing-file fallback, PID identity validation and exited processes. Desktop UI inspection showed native Chrome, AyuGram and WebView2 icons with readable names. Chrome favicons use the documented favicon API but remain pending a real-extension browser check.
+
+## 0.2.2 restricted browser processes
+
+Reproduced the 0.2.1 failure using the actual downloaded GitHub assemblies: reading MainModule failed with Access Denied for live Chrome and WebView2 audio processes. On the same process IDs and access context, the patched resolver returned the real names and non-fallback icons. Nine identity assertions now include limited-access native path lookup, identity mismatch rejection and background-thread process resolution.

@@ -48,3 +48,5 @@ Desktop strings are WPF DynamicResources; extension strings are a local bilingua
 ## Application identity
 
 Audio snapshots carry a representative process ID for each process-name group. UI choices resolve EXE descriptions and icons on background tasks, verify that the PID still has the expected process name, freeze image sources for cross-thread use, and cache by file path/modification time. Metadata cannot block the audio worker. Unknown/inaccessible programs retain a generic icon and process name; a failed lookup is retried later. Icons and paths are not persisted or uploaded.
+
+Version 0.2.2 uses QueryFullProcessImageName with PROCESS_QUERY_LIMITED_INFORMATION instead of MainModule (which also requires VM_READ). If the audio process is inaccessible or exits, another running process with the same executable name can provide metadata. The resolved executable filename is checked against the expected process identity. Fallback images are not cached as successful native icons.

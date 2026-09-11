@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
+using Microsoft.Win32.SafeHandles;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -21,18 +23,57 @@ public static class AppIdentityReader
 
     public static AppIdentity? Read(int processId, string expectedProcess)
     {
+        var identity = ReadProcess(processId, expectedProcess);
+        if (identity is not null) return identity;
+        // Chromium audio sessions can belong to a restricted utility process.
+        // Its ordinary browser process has the same executable and readable metadata.
+        Process[] siblings;
+        try { siblings = Process.GetProcessesByName(expectedProcess); }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException or ArgumentException) { return null; }
         try
         {
-            using var process = Process.GetProcessById(processId);
-            // Avoid attributing an icon to a reused PID.
-            if (!string.Equals(process.ProcessName, expectedProcess, StringComparison.OrdinalIgnoreCase)) return null;
-            string? path = process.MainModule?.FileName;
-            if (string.IsNullOrEmpty(path)) return null;
+            foreach (var sibling in siblings)
+            {
+                if (sibling.Id == processId) continue;
+                identity = ReadProcess(sibling.Id, expectedProcess);
+                if (identity is not null) return identity;
+            }
+            return null;
+        }
+        finally { foreach (var sibling in siblings) sibling.Dispose(); }
+    }
+
+    private static AppIdentity? ReadProcess(int processId, string expectedProcess)
+    {
+        try
+        {
+            string? path = ReadExecutablePath(processId, expectedProcess);
+            if (path is null) return null;
             return ReadFile(path, expectedProcess);
         }
         catch (Exception ex) when (ex is Win32Exception or InvalidOperationException or ArgumentException or NotSupportedException or UnauthorizedAccessException)
         { return null; }
     }
+
+    public static string? ReadExecutablePath(int processId, string expectedProcess)
+    {
+        // MainModule also requests PROCESS_VM_READ, which browser sandboxes may deny.
+        // QueryFullProcessImageName needs only PROCESS_QUERY_LIMITED_INFORMATION.
+        using var handle = OpenProcess(0x1000, false, processId);
+        if (handle.IsInvalid) return null;
+        var buffer = new StringBuilder(32768);
+        int size = buffer.Capacity;
+        if (!QueryFullProcessImageName(handle, 0, buffer, ref size)) return null;
+        string path = buffer.ToString();
+        // Compare the queried file name to prevent attributing a reused PID to another app.
+        return string.Equals(Path.GetFileNameWithoutExtension(path), expectedProcess, StringComparison.OrdinalIgnoreCase) ? path : null;
+    }
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern SafeProcessHandle OpenProcess(uint access, [MarshalAs(UnmanagedType.Bool)] bool inheritHandle, int processId);
+    [DllImport("kernel32.dll", EntryPoint = "QueryFullProcessImageNameW", CharSet = CharSet.Unicode, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool QueryFullProcessImageName(SafeProcessHandle process, int flags, StringBuilder path, ref int size);
 
     public static AppIdentity ReadFile(string path, string fallbackName)
     {
@@ -63,7 +104,7 @@ public static class AppIdentityReader
             var result = new AppIdentity(name, image);
             // Bounded memory: icons are only an in-memory convenience cache.
             if (Cache.Count >= 256) Cache.Clear();
-            Cache.TryAdd(key, result);
+            if (image != FallbackIcon) Cache.TryAdd(key, result);
             return result;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)

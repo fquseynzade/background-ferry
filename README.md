@@ -10,6 +10,8 @@ A small Windows tray app that gently lowers your music while selected applicatio
 
 ![Background Ferry 0.2.1 — real desktop interface](docs/screenshots/mixer-0.2.1.jpg)
 
+**Fixed in 0.2.2:** native icons now resolve for restricted Chrome/WebView2 audio processes without requiring administrator rights. [Release notes](docs/release-0.2.2.md).
+
 ## Quick start
 
 1. Extract the **entire** `BackgroundFerry-win-x64.zip` release into a permanent folder. Run `BackgroundFerry.exe`. The portable package includes .NET; installation is unnecessary.

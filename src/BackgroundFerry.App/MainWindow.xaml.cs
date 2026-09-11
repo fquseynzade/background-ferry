@@ -37,7 +37,7 @@ public sealed class AppChoice : INotifyPropertyChanged
         try
         {
             var identity = await Task.Run(() => AppIdentityReader.Read(processId, Process));
-            nextMetadataAttempt = DateTime.UtcNow.AddSeconds(identity is null ? 30 : 300);
+            nextMetadataAttempt = DateTime.UtcNow.AddSeconds(identity is null || identity.Icon == AppIdentityReader.FallbackIcon ? 30 : 300);
             if (identity is null) return;
             displayName = identity.Name; icon = identity.Icon;
             PropertyChanged?.Invoke(this, new(nameof(Name)));
