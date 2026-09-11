@@ -1,0 +1,102 @@
+<Window x:Class="BackgroundFerry.App.MainWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Background Ferry" Width="1020" Height="810" MinWidth="900" MinHeight="740"
+ WindowStartupLocation="CenterScreen" Background="#111820" Foreground="#EEF3F6" FontFamily="Segoe UI" FontSize="14">
+ <Window.Resources>
+  <SolidColorBrush x:Key="Muted" Color="#9AAAB9"/>
+  <Style TargetType="Button">
+   <Setter Property="Background" Value="#293746"/><Setter Property="Foreground" Value="#F4F7FA"/>
+   <Setter Property="Padding" Value="18,10"/><Setter Property="BorderThickness" Value="0"/>
+   <Setter Property="Cursor" Value="Hand"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+    <Border x:Name="Surface" CornerRadius="8" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="Opacity" Value="0.85"/></Trigger><Trigger Property="IsEnabled" Value="False"><Setter TargetName="Surface" Property="Opacity" Value="0.4"/></Trigger></ControlTemplate.Triggers>
+   </ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style TargetType="CheckBox"><Setter Property="Foreground" Value="#DEE7EF"/><Setter Property="Margin" Value="0,5"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+  <Style TargetType="Slider"><Setter Property="Margin" Value="0,6,0,0"/><Setter Property="IsSnapToTickEnabled" Value="True"/></Style>
+  <Style TargetType="ComboBox"><Setter Property="Padding" Value="10,7"/><Setter Property="Foreground" Value="#172330"/><Setter Property="FontSize" Value="14"/></Style>
+  <Style TargetType="ProgressBar"><Setter Property="Height" Value="6"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Background" Value="#344353"/><Setter Property="Foreground" Value="#82DBBE"/><Setter Property="Maximum" Value="100"/></Style>
+  <Style x:Key="Card" TargetType="Border"><Setter Property="Background" Value="#1B2632"/><Setter Property="CornerRadius" Value="12"/><Setter Property="Padding" Value="22"/></Style>
+ </Window.Resources>
+ <Grid Margin="30,24">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <Grid Margin="0,0,0,22">
+   <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+   <StackPanel>
+    <TextBlock Text="BACKGROUND FERRY" Foreground="#82DBBE" FontSize="12" FontWeight="Bold"/>
+    <TextBlock Text="Your music. Always in the background." FontSize="27" FontWeight="SemiBold" Margin="0,8,0,6"/>
+    <TextBlock Text="Make room for what you are listening to. Let the music return in the pauses." Foreground="{StaticResource Muted}"/>
+   </StackPanel>
+   <Button Grid.Column="1" Content="How it works" Click="Help_Click" VerticalAlignment="Top"/>
+  </Grid>
+  <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+   <StackPanel>
+    <Grid>
+     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="18"/><ColumnDefinition/></Grid.ColumnDefinitions>
+     <Border Style="{StaticResource Card}">
+      <StackPanel>
+       <TextBlock Text="01   BACKGROUND MUSIC" FontSize="12" Foreground="#82DBBE" FontWeight="Bold"/>
+       <TextBlock Text="What should fade?" FontSize="21" FontWeight="SemiBold" Margin="0,10,0,14"/>
+       <ComboBox x:Name="MusicPicker" DisplayMemberPath="Name" SelectedValuePath="Process" SelectionChanged="Music_Changed" AutomationProperties.Name="Background music application"/>
+       <TextBlock x:Name="MusicHint" Text="Play some music so its app appears here." TextWrapping="Wrap" Foreground="{StaticResource Muted}" Margin="0,12,0,16"/>
+       <ProgressBar x:Name="MusicMeter" AutomationProperties.Name="Music signal level"/>
+       <TextBlock x:Name="MusicLevel" Text="Waiting for music" Foreground="{StaticResource Muted}" Margin="0,7,0,0" FontSize="12"/>
+      </StackPanel>
+     </Border>
+     <Border Grid.Column="2" Style="{StaticResource Card}">
+      <StackPanel>
+       <TextBlock Text="02   PRIORITY AUDIO" FontSize="12" Foreground="#F2C782" FontWeight="Bold"/>
+       <TextBlock Text="What should come through?" FontSize="21" FontWeight="SemiBold" Margin="0,10,0,10"/>
+       <ScrollViewer Height="112" VerticalScrollBarVisibility="Auto">
+        <ItemsControl x:Name="PriorityList"><ItemsControl.ItemTemplate><DataTemplate>
+         <CheckBox Content="{Binding Name}" IsChecked="{Binding Selected, Mode=TwoWay}" IsEnabled="{Binding CanPrioritize}" Checked="Priority_Changed" Unchecked="Priority_Changed"/>
+        </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+       </ScrollViewer>
+       <TextBlock Text="Choose apps explicitly. Unselected apps are ignored." Foreground="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap" Margin="0,8,0,0"/>
+      </StackPanel>
+     </Border>
+    </Grid>
+    <Border Style="{StaticResource Card}" Margin="0,18,0,0">
+     <StackPanel>
+      <Grid>
+       <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="270"/></Grid.ColumnDefinitions>
+       <StackPanel><TextBlock Text="03   THE MIX" FontSize="12" FontWeight="Bold" Foreground="#82DBBE"/><TextBlock Text="Find a comfortable balance" FontSize="21" FontWeight="SemiBold" Margin="0,8,0,0"/></StackPanel>
+       <ComboBox x:Name="ModePicker" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="Setting_Changed" AutomationProperties.Name="Mix mode">
+        <ComboBoxItem Content="Steady · consistent quiet music"/>
+        <ComboBoxItem Content="Adaptive · follows audio level"/>
+       </ComboBox>
+      </Grid>
+      <TextBlock x:Name="ModeHint" TextWrapping="Wrap" Foreground="{StaticResource Muted}" Margin="0,12,0,16"/>
+      <Grid>
+       <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="28"/><ColumnDefinition/></Grid.ColumnDefinitions>
+       <StackPanel><TextBlock x:Name="DuckLabel"/><Slider x:Name="DuckSlider" Minimum="1" Maximum="60" TickFrequency="1" ValueChanged="Setting_Changed" AutomationProperties.Name="Music remaining while ducked"/><TextBlock Text="Percentage of your music's original app volume" FontSize="12" Foreground="{StaticResource Muted}" Margin="0,5,0,0"/></StackPanel>
+       <StackPanel Grid.Column="2"><TextBlock x:Name="ThresholdLabel"/><Slider x:Name="ThresholdSlider" Minimum="-70" Maximum="-10" TickFrequency="1" ValueChanged="Setting_Changed" AutomationProperties.Name="Priority signal threshold"/><TextBlock Text="Lower threshold catches quieter audio" FontSize="12" Foreground="{StaticResource Muted}" Margin="0,5,0,0"/></StackPanel>
+      </Grid>
+      <Expander x:Name="Advanced" Header="Timing &amp; startup" Foreground="#C5D4E2" Margin="0,20,0,0">
+       <StackPanel Margin="0,12,0,0">
+        <Grid>
+         <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="20"/><ColumnDefinition/><ColumnDefinition Width="20"/><ColumnDefinition/></Grid.ColumnDefinitions>
+         <StackPanel><TextBlock x:Name="AttackLabel"/><Slider x:Name="AttackSlider" Minimum="50" Maximum="1000" TickFrequency="50" ValueChanged="Setting_Changed" AutomationProperties.Name="Fade down time"/></StackPanel>
+         <StackPanel Grid.Column="2"><TextBlock x:Name="HoldLabel"/><Slider x:Name="HoldSlider" Minimum="200" Maximum="5000" TickFrequency="100" ValueChanged="Setting_Changed" AutomationProperties.Name="Silence hold time"/></StackPanel>
+         <StackPanel Grid.Column="4"><TextBlock x:Name="ReleaseLabel"/><Slider x:Name="ReleaseSlider" Minimum="200" Maximum="5000" TickFrequency="100" ValueChanged="Setting_Changed" AutomationProperties.Name="Music return time"/></StackPanel>
+        </Grid>
+        <WrapPanel Margin="0,10,0,0"><CheckBox x:Name="StartupCheck" Content="Start with Windows" Checked="Startup_Changed" Unchecked="Startup_Changed" Margin="0,5,24,5"/><CheckBox x:Name="MinimizedCheck" Content="Start in tray" Checked="Setting_Changed" Unchecked="Setting_Changed"/></WrapPanel>
+       </StackPanel>
+      </Expander>
+     </StackPanel>
+    </Border>
+    <TextBlock x:Name="Notice" Foreground="#F2C782" TextWrapping="Wrap" Margin="2,14,2,10"/>
+   </StackPanel>
+  </ScrollViewer>
+  <Border Grid.Row="2" Background="#202F3B" CornerRadius="12" Padding="20,16" Margin="0,16,0,0">
+   <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="180"/><ColumnDefinition Width="24"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+    <StackPanel VerticalAlignment="Center"><TextBlock x:Name="Status" Text="Ready when you are" FontSize="17" FontWeight="SemiBold"/><TextBlock x:Name="StatusDetail" Text="Select your sources, then start the mix." Foreground="{StaticResource Muted}" FontSize="12" Margin="0,5,0,0"/></StackPanel>
+    <StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock x:Name="GainLabel" Text="MUSIC   100%" FontSize="11" Foreground="#82DBBE" Margin="0,0,0,7"/><ProgressBar x:Name="GainMeter" Value="100" AutomationProperties.Name="Music gain"/></StackPanel>
+    <Button x:Name="ToggleButton" Grid.Column="3" Content="Start mixing" Background="#82DBBE" Foreground="#10251E" FontWeight="SemiBold" Width="145" Click="Toggle_Click"/>
+   </Grid>
+  </Border>
+ </Grid>
+</Window>

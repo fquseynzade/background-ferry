@@ -1,0 +1,13 @@
+<Solution>
+ <Folder Name="/src/">
+  <Project Path="src/BackgroundFerry.Core/BackgroundFerry.Core.csproj" />
+  <Project Path="src/BackgroundFerry.Windows/BackgroundFerry.Windows.csproj" />
+  <Project Path="src/BackgroundFerry.App/BackgroundFerry.App.csproj" />
+ </Folder>
+ <Folder Name="/tests/">
+  <Project Path="tests/BackgroundFerry.Tests/BackgroundFerry.Tests.csproj" />
+  <Project Path="tests/BackgroundFerry.Integration/BackgroundFerry.Integration.csproj" />
+  <Project Path="tests/FixtureMusic/FixtureMusic.csproj" />
+  <Project Path="tests/FixturePriority/FixturePriority.csproj" />
+ </Folder>
+</Solution>

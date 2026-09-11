@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+.vs/
+.idea/
+artifacts/
+TestResults/
+*.user
+*.suo
+diagnostics.json
+*.log
+.DS_Store
