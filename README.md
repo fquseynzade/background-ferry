@@ -6,6 +6,8 @@ A small Windows tray app that gently lowers your music while selected applicatio
 
 [Русский](README.ru.md) · [Architecture](docs/architecture.md) · [Contributing](CONTRIBUTING.md) · [Publish to GitHub](docs/github-publishing.md)
 
+**New in 0.2:** graphite/mint UI, persistent RU/EN, information tooltips, and an experimental [Chrome tab companion](docs/chrome-tabs.md). [Design concept](docs/design/README.md) · [Release notes](docs/release-0.2.md).
+
 ## Quick start
 
 1. Extract the **entire** `BackgroundFerry-win-x64.zip` release into a permanent folder. Run `BackgroundFerry.exe`. The portable package includes .NET; installation is unnecessary.
@@ -15,7 +17,7 @@ A small Windows tray app that gently lowers your music while selected applicatio
 
 To stop, press **Stop mixing** or choose **Exit and restore volume** in the tray menu. `Ctrl+M` toggles mixing while the window is focused.
 
-Apps appear after they create an audio session. Saved choices remain available while the app is closed. Use separate apps for music and priority content; tabs in the same browser can share an audio session.
+Apps appear after they create an audio session. Saved choices remain available while the app is closed. Use separate apps in the desktop mixer. For individual tabs in Chrome, install the included companion from the Chrome tabs page.
 
 ## Two listening modes
 
@@ -28,7 +30,7 @@ Apps appear after they create an audio session. Saved choices remain available w
 
 Adaptive mode ranges from the selected percentage to 1.65 times that value (capped at 65% of baseline). It does not try to make two sources add up to an arbitrary “100 loudness units.”
 
-Adjust **signal threshold** if quiet videos do not trigger mixing. The default is −42 dBFS. Under **Timing & startup**, tune fade down (180 ms), silence hold (900 ms), and fade back (1400 ms). Timing denotes approximately 95% of a transition. Settings changes stop the current mix and restore music; press Start to apply them.
+Adjust **signal threshold** if quiet videos do not trigger mixing. The default is −42 dBFS. In **Mixing control**, tune fade down (180 ms), silence hold (900 ms), and fade back (1400 ms). Timing denotes approximately 95% of a transition. Mix parameter changes stop the desktop mix and restore music; press Start to apply them. Language and startup preferences do not stop it. Hover over an **i**, or focus it with Tab, for explanations.
 
 ## Respecting your controls
 
@@ -46,7 +48,7 @@ Windows 10/11, shared-mode audio. The main release is x64. The publish script al
 
 This is an app-volume controller, not a music player, voice recognizer, compressor inserted into an audio stream, or LUFS normalizer. It reads Windows peak meters without recording or saving audio. It cannot distinguish a word from a notification in the same chosen application. Smooth fades and a silence hold reduce pumping but are not speech detection.
 
-- Same-browser YouTube and YouTube Music are not independently supported; use separate applications or browsers.
+- Individual Chrome tabs use the experimental companion, independently of the desktop engine. Real tab capture needs a manual listening check; see [setup and limitations](docs/chrome-tabs.md).
 - Exclusive-mode playback, ASIO, and remote Spotify Connect targets are outside scope.
 - Apps that change their own session volume can trigger manual override. A player's internal volume slider may operate before the Windows mixer and therefore may not be visible as an override.
 - Recovery is best effort: it cannot guarantee restoration after power loss, a missing output device, or replacement of the original session. If needed, reset that app in the Windows volume mixer.
@@ -74,6 +76,7 @@ Output: `artifacts/BackgroundFerry-win-x64.zip`. Keep the executable and its com
 ```powershell
 ./scripts/test.ps1
 ./scripts/test.ps1 -Integration
+./scripts/test.ps1 -Chrome # Node.js 22+ for extension logic tests
 ```
 
 The first command builds all projects and runs the deterministic assertion suite. It exits nonzero on any failure. The second also runs real Windows audio tests and **plays two very quiet synthetic tones** on the default output. It changes only its test-owned audio sessions. An active audio output and an interactive Windows session are required. Integration tests are not run on headless GitHub runners.
@@ -88,6 +91,6 @@ To remove: uncheck **Start with Windows**, exit from the tray, then delete the p
 
 ## GitHub
 
-CI builds, tests, and uploads the portable artifact. Pushing a `v*` tag runs tests, packages the app, and creates a GitHub Release with a ZIP and SHA-256 checksum. The first release is unsigned. The local project contains no hosting account details or credentials.
+CI builds, tests, and uploads the portable artifact. Pushing a `v*` tag runs tests, packages the app, and creates a GitHub Release with a ZIP and SHA-256 checksum. Portable releases are unsigned. The local project contains no hosting account details or credentials.
 
 This project uses the MIT license. Audio ducking is an established technique; the aim here is a simple, predictable listening experience.

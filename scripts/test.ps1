@@ -1,4 +1,4 @@
-param([switch]$Integration)
+param([switch]$Integration, [switch]$Chrome)
 $ErrorActionPreference = 'Stop'
 Push-Location (Split-Path $PSScriptRoot)
 try {
@@ -6,6 +6,10 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Build failed' }
     dotnet run --project tests/BackgroundFerry.Tests -c Release --no-build
     if ($LASTEXITCODE -ne 0) { throw 'Core tests failed' }
+    if ($Chrome) {
+        node --test tests/chrome/mix.test.mjs tests/chrome/offscreen.test.mjs
+        if ($LASTEXITCODE -ne 0) { throw 'Chrome logic tests failed' }
+    }
     if ($Integration) {
         $testState = Join-Path ([System.IO.Path]::GetTempPath()) ('BackgroundFerry.Tests-' + [guid]::NewGuid())
         dotnet run --project tests/BackgroundFerry.Integration -c Release --no-build -- "$PWD" $testState

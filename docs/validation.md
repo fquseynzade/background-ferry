@@ -1,4 +1,4 @@
-# Validation scope — 0.1.0
+# Validation scope — 0.2.0
 
 Validated locally on Windows x64 with .NET SDK 10.0.401. This is a first release, not a claim of universal compatibility with every audio driver or streaming service.
 
@@ -19,10 +19,14 @@ The integration harness produces very quiet tones on the default output. It does
 
 ## UI inspection
 
-The WPF window was opened and visually inspected at its default size. Headings, source controls, sliders, help and start/stop controls were present in the accessibility tree. Starting without sources produced the expected validation message. Later work moved audio execution off the UI thread; that service is covered by the integration test above.
+The v0.2 desktop window was opened with a separate test settings folder. Its mixer and settings pages, Russian/English switching, and information tooltip were visually inspected using Computer Use. The main controls and localized descriptions appear in the accessibility tree. High-DPI resizing, tray interactions, and startup preference changes still need a manual pass.
 
-A final interactive pass of the portable build was interrupted by the operator. Do not treat this as end-to-end UI automation coverage. The remaining recommended manual checks are tray menu interaction, startup preference toggling, high-DPI resizing, and listening with the user's actual music/video apps.
+## Chrome companion
+
+Node.js tests cover steady ducking, held silence, return, adaptive bounds, threshold hysteresis and invalid settings. A simulated Web Audio harness additionally checks graph connections, unity priority gain, music attenuation, replacement of music sources, source closure, failed capture, and track/node cleanup. These tests do not establish actual browser capture permissions or audible routing.
+
+A real Playwright/Chromium harness is provided in `tests/chrome/browser.cjs`. It creates only local synthetic tone pages and an isolated profile, loads the extension, invokes its action via CDP, and checks duck/restore/source closure. Run with Playwright plus Chromium installed: `node tests/chrome/browser.cjs`. It was not successfully executed here: process launch failed and a subsequent debug-browser launch was blocked by the local approval reviewer (no detailed reason). The extension remains experimental pending the manual listening workflow in [chrome-tabs.md](chrome-tabs.md).
 
 ## Not claimed
 
-No physical headphone-unplug test, ARM64 device test, Windows 10 device test, exclusive-mode test, browser-tab isolation, speech recognition, or Spotify/Apple Music certification. These limits do not change the normal shared-mode two-application workflow, but should be kept visible in release notes.
+No physical headphone-unplug test, ARM64 device test, Windows 10 device test, exclusive-mode test, speech recognition, or Spotify/Apple Music/YouTube service certification. Browser tab capture, latency, protected players, and recovery after browser/audio-device failures need manual validation.

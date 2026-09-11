@@ -14,8 +14,8 @@ Choose `--public` instead if you want the project to be publicly readable. GitHu
 Once the default-branch workflow passes, publish a release:
 
 ```powershell
-git tag v0.1.0
-git push origin v0.1.0
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
 The release workflow builds and tests the source, creates a self-contained Windows x64 ZIP and a SHA-256 checksum, and attaches them to a GitHub Release. This workflow needs repository Actions enabled. Review its files under `.github/workflows` before publishing.

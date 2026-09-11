@@ -15,6 +15,7 @@ public sealed record MixSettings
     public double ReleaseMs { get; init; } = 1400;
     public bool StartWithWindows { get; init; }
     public bool StartMinimized { get; init; }
+    public string Language { get; init; } = "ru";
 
     public void Validate(bool requireSources = true)
     {
@@ -23,6 +24,7 @@ public sealed record MixSettings
         if (PriorityProcesses.Any(p => string.Equals(p, MusicProcess, StringComparison.OrdinalIgnoreCase)))
             throw new ArgumentException("Music and priority must be different applications.");
         if (!Enum.IsDefined(Mode)) throw new ArgumentException("Unknown mix mode.");
+        if (Language is not ("en" or "ru")) throw new ArgumentException("Unsupported language.");
         Range(DuckPercent, 1, 60, nameof(DuckPercent));
         Range(ThresholdDb, -70, -10, nameof(ThresholdDb));
         Range(AttackMs, 50, 1000, nameof(AttackMs));

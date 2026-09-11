@@ -7,6 +7,8 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Publish failed' }
     Copy-Item LICENSE, README.md, README.ru.md, CONTRIBUTING.md -Destination $destination
     Copy-Item docs -Destination $destination -Recurse -Force
+    Copy-Item chrome-extension -Destination $destination -Recurse -Force
+    Compress-Archive -Path "chrome-extension/*" -DestinationPath "artifacts/BackgroundFerry-Chrome.zip" -Force
     Compress-Archive -Path "$destination/*" -DestinationPath "artifacts/BackgroundFerry-$Runtime.zip" -Force
     Get-FileHash "artifacts/BackgroundFerry-$Runtime.zip" -Algorithm SHA256 | Format-List
 } finally { Pop-Location }

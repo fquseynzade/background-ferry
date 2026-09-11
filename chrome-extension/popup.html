@@ -1,0 +1,11 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Background Ferry</title><link rel="stylesheet" href="popup.css"></head><body>
+<header><div><div class="brand">≈ BACKGROUND FERRY</div><h1 data-t="title"></h1></div><select id="language" aria-label="Language"><option value="en">EN</option><option value="ru">RU</option></select></header>
+<p class="sub" data-t="tagline"></p>
+<section><div class="label"><span data-t="assign"></span><button class="info" data-tip="assignTip">i</button></div><div class="actions"><button id="music" data-t="music"></button><button id="priority" data-t="priority"></button></div></section>
+<section id="sources" aria-live="polite"></section>
+<section><div class="label"><span data-t="mode"></span><button class="info" data-tip="modeTip">i</button><select id="mode"><option value="steady" data-t="steady"></option><option value="adaptive" data-t="adaptive"></option></select></div>
+<div class="setting"><label for="duck" data-t="duck"></label><button class="info" data-tip="duckTip">i</button><output id="duckValue"></output><input id="duck" type="range" min="1" max="60"></div>
+<div class="setting"><label for="threshold" data-t="threshold"></label><button class="info" data-tip="thresholdTip">i</button><output id="thresholdValue"></output><input id="threshold" type="range" min="-70" max="-10"></div>
+<details><summary data-t="settings"></summary><div id="timing"></div></details></section>
+<p id="error" role="alert"></p><footer><div class="status"><span id="status"></span><span id="gain"></span></div><button id="toggle" class="primary" data-t="start"></button><div class="release"><button id="release" class="plain" data-t="releaseAll"></button><button class="info" data-tip="releaseAllTip">i</button></div></footer>
+<p class="fine" data-t="separate"></p><script type="module" src="popup.js"></script></body></html>

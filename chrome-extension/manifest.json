@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Background Ferry — Tab Mixer",
+  "version": "0.2.0",
+  "description": "Let a music tab fade behind your video tabs. Local audio processing, English and Russian UI.",
+  "minimum_chrome_version": "116",
+  "permissions": ["activeTab", "tabCapture", "offscreen", "storage"],
+  "background": { "service_worker": "worker.js", "type": "module" },
+  "action": { "default_popup": "popup.html", "default_title": "Background Ferry" },
+  "commands": { "_execute_action": { "suggested_key": { "default": "Ctrl+Shift+Y" } } }
+}

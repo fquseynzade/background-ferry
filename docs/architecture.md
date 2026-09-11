@@ -38,3 +38,9 @@ Journal writes happen on the control thread for ordering. This trades occasional
 ## Sources
 
 The interop layout follows Microsoft's [audio sessions](https://learn.microsoft.com/en-us/windows/win32/coreaudio/audio-sessions), [session manager](https://learn.microsoft.com/en-us/windows/win32/api/audiopolicy/nn-audiopolicy-iaudiosessionmanager2), [session control](https://learn.microsoft.com/en-us/windows/win32/api/audiopolicy/nn-audiopolicy-iaudiosessioncontrol2), [volume](https://learn.microsoft.com/en-us/windows/win32/api/audioclient/nn-audioclient-isimpleaudiovolume), and [peak meter](https://learn.microsoft.com/en-us/windows/win32/api/endpointvolume/nn-endpointvolume-iaudiometerinformation) interfaces. COM IIDs are public Windows interface identifiers.
+
+## Chrome companion (0.2)
+
+MV3 worker serializes commands, stores normalized preferences and obtains user-authorized tab stream IDs. An offscreen USER_MEDIA document consumes them with getUserMedia, connecting each input to an analyser, gain and AudioContext destination. This restores audible output that tab capture otherwise suppresses. A 50 ms loop reads priority peaks before attenuation and changes only music gain. Closing a source removes its nodes and stops tracks; missing either role suspends mixing and restores unity. Stop/release closes all streams and the offscreen context. No native messaging host or desktop bridge is needed. See [Chrome setup](chrome-tabs.md).
+
+Desktop strings are WPF DynamicResources; extension strings are a local bilingual dictionary. Preferences survive updates. The original image concept is documented in [design](design/README.md).
