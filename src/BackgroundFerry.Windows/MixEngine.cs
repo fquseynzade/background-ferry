@@ -2,7 +2,7 @@ using BackgroundFerry.Core;
 
 namespace BackgroundFerry.Windows;
 
-public sealed record AppLevel(string Process, double Peak, double Volume, bool Active, bool Overridden);
+public sealed record AppLevel(string Process, double Peak, double Volume, bool Active, bool Overridden, int ProcessId = 0);
 
 /// <summary>Single-threaded owner; all methods called on the same COM-initialized thread.</summary>
 public sealed class MixEngine : IDisposable
@@ -92,7 +92,8 @@ public sealed class MixEngine : IDisposable
 
         Levels = readings.GroupBy(r => r.Session.ProcessName).Select(g => new AppLevel(g.Key,
             g.Max(r => r.Peak), g.Max(r => r.Volume), g.Any(r => r.Active),
-            g.Any(r => leases.TryGetValue(r.Session.Id, out var l) && l.Overridden))).OrderBy(x => x.Process).ToArray();
+            g.Any(r => leases.TryGetValue(r.Session.Id, out var l) && l.Overridden),
+            g.First().Session.ProcessId)).OrderBy(x => x.Process).ToArray();
     }
 
     private void Restore(AudioSession session)

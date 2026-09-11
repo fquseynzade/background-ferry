@@ -4,6 +4,13 @@
  Title="Background Ferry" Width="1100" Height="790" MinWidth="970" MinHeight="700"
  WindowStartupLocation="CenterScreen" Background="#101217" Foreground="#F0F2F5" FontFamily="Segoe UI" FontSize="14">
  <Window.Resources>
+  <DataTemplate x:Key="AppSourceTemplate">
+   <Grid ToolTip="{Binding ProcessFile}" MinHeight="28">
+    <Grid.ColumnDefinitions><ColumnDefinition Width="28"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+    <Image Source="{Binding Icon}" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
+    <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="9,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+   </Grid>
+  </DataTemplate>
   <SolidColorBrush x:Key="Muted" Color="#9199AB"/>
   <Style TargetType="Button">
    <Setter Property="Background" Value="#252A35"/><Setter Property="Foreground" Value="#EFF3F5"/><Setter Property="Padding" Value="18,12"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Cursor" Value="Hand"/>
@@ -67,7 +74,7 @@
   <Grid.ColumnDefinitions><ColumnDefinition Width="194"/><ColumnDefinition/></Grid.ColumnDefinitions>
   <Border Background="#14171E" BorderBrush="#262B36" BorderThickness="0,0,1,0"><DockPanel>
    <StackPanel DockPanel.Dock="Top" Margin="25,29,10,35"><TextBlock Text="≈" FontSize="40" Foreground="#8CE6BE" Height="47"/><TextBlock Text="Background" FontSize="19" FontWeight="SemiBold"/><TextBlock Text="Ferry" FontSize="19" Foreground="#8CE6BE"/></StackPanel>
-   <TextBlock DockPanel.Dock="Bottom" Text="v0.2.0" Foreground="#657084" Margin="29,20"/>
+   <TextBlock DockPanel.Dock="Bottom" Text="v0.2.1" Foreground="#657084" Margin="29,20"/>
    <StackPanel><RadioButton x:Name="MixerNav" Content="{DynamicResource Mixer}" Style="{StaticResource Nav}" GroupName="Page" IsChecked="True" Checked="Navigate"/><RadioButton x:Name="TabsNav" Content="{DynamicResource Tabs}" Style="{StaticResource Nav}" GroupName="Page" Checked="Navigate"/><RadioButton x:Name="SettingsNav" Content="{DynamicResource Settings}" Style="{StaticResource Nav}" GroupName="Page" Checked="Navigate"/></StackPanel>
   </DockPanel></Border>
   <Grid Grid.Column="1" Margin="30,30,30,24">
@@ -79,12 +86,12 @@
      <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition/></Grid.ColumnDefinitions>
       <Border Style="{StaticResource Card}"><StackPanel>
        <StackPanel Orientation="Horizontal" Margin="0,0,0,17"><TextBlock Text="{DynamicResource Music}" FontSize="17" FontWeight="SemiBold"/><Button Style="{StaticResource Info}" ToolTip="{DynamicResource MusicTip}"/></StackPanel>
-       <ComboBox x:Name="MusicPicker" DisplayMemberPath="Name" SelectedValuePath="Process" SelectionChanged="Music_Changed" AutomationProperties.Name="{DynamicResource Music}"/>
+       <ComboBox x:Name="MusicPicker" ItemTemplate="{StaticResource AppSourceTemplate}" TextSearch.TextPath="Name" SelectedValuePath="Process" SelectionChanged="Music_Changed" AutomationProperties.Name="{DynamicResource Music}"/>
        <ProgressBar x:Name="MusicMeter" Margin="0,22,0,0" AutomationProperties.Name="{DynamicResource Music}"/><TextBlock x:Name="MusicLevel" Foreground="{StaticResource Muted}" Margin="0,10,0,0" FontSize="12" TextWrapping="Wrap"/>
       </StackPanel></Border>
       <Border Grid.Column="2" Style="{StaticResource Card}"><StackPanel>
        <StackPanel Orientation="Horizontal" Margin="0,0,0,12"><TextBlock Text="{DynamicResource Priority}" FontSize="17" FontWeight="SemiBold"/><Button Style="{StaticResource Info}" ToolTip="{DynamicResource PriorityTip}"/></StackPanel>
-       <ScrollViewer Height="96" VerticalScrollBarVisibility="Auto"><ItemsControl x:Name="PriorityList"><ItemsControl.ItemTemplate><DataTemplate><CheckBox Content="{Binding Name}" IsChecked="{Binding Selected, Mode=TwoWay}" IsEnabled="{Binding CanPrioritize}" Checked="Priority_Changed" Unchecked="Priority_Changed"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></ScrollViewer>
+       <ScrollViewer Height="96" VerticalScrollBarVisibility="Auto"><ItemsControl x:Name="PriorityList"><ItemsControl.ItemTemplate><DataTemplate><CheckBox Content="{Binding}" ContentTemplate="{StaticResource AppSourceTemplate}" AutomationProperties.Name="{Binding Name}" ToolTip="{Binding ProcessFile}" IsChecked="{Binding Selected, Mode=TwoWay}" IsEnabled="{Binding CanPrioritize}" Checked="Priority_Changed" Unchecked="Priority_Changed"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></ScrollViewer>
       </StackPanel></Border>
      </Grid>
      <Border Style="{StaticResource Card}" Margin="0,16,0,0"><StackPanel>

@@ -17,10 +17,16 @@ function render(){
  $("sources").replaceChildren();
  for(const source of state.sources){
   const row=document.createElement("div");row.className="source";
+  const icon=document.createElement("img");icon.className="source-icon";icon.width=28;icon.height=28;icon.alt="";
+  icon.src=chrome.runtime.getURL("tab-icon.svg");
+  if(/^https?:/.test(source.pageUrl||"")){
+   const url=new URL(chrome.runtime.getURL("/_favicon/"));url.searchParams.set("pageUrl",source.pageUrl);url.searchParams.set("size","32");icon.src=url.href;
+  }
+  icon.onerror=()=>{icon.onerror=null;icon.src=chrome.runtime.getURL("tab-icon.svg");};
   const name=document.createElement("div");name.className="name";name.textContent=source.title;name.title=source.title;
   const role=document.createElement("small");role.textContent=t(source.role,lang);name.append(role);
   const remove=document.createElement("button");remove.textContent="×";remove.setAttribute("aria-label",t("remove",lang));remove.onclick=()=>act("REMOVE",{tabId:source.tabId});
-  row.append(name,remove);$("sources").append(row);
+  row.append(icon,name,remove);$("sources").append(row);
  }
  if(!state.sources.length){const p=document.createElement("span");p.className="empty";p.textContent=t("empty",lang);$("sources").append(p);}
  $("toggle").textContent=t(state.enabled?"stop":"start",lang);$("status").textContent=t(state.phase,lang);$("gain").textContent=Math.round(state.gain*100)+"%";

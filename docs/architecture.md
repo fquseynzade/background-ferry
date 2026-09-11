@@ -44,3 +44,7 @@ The interop layout follows Microsoft's [audio sessions](https://learn.microsoft.
 MV3 worker serializes commands, stores normalized preferences and obtains user-authorized tab stream IDs. An offscreen USER_MEDIA document consumes them with getUserMedia, connecting each input to an analyser, gain and AudioContext destination. This restores audible output that tab capture otherwise suppresses. A 50 ms loop reads priority peaks before attenuation and changes only music gain. Closing a source removes its nodes and stops tracks; missing either role suspends mixing and restores unity. Stop/release closes all streams and the offscreen context. No native messaging host or desktop bridge is needed. See [Chrome setup](chrome-tabs.md).
 
 Desktop strings are WPF DynamicResources; extension strings are a local bilingual dictionary. Preferences survive updates. The original image concept is documented in [design](design/README.md).
+
+## Application identity
+
+Audio snapshots carry a representative process ID for each process-name group. UI choices resolve EXE descriptions and icons on background tasks, verify that the PID still has the expected process name, freeze image sources for cross-thread use, and cache by file path/modification time. Metadata cannot block the audio worker. Unknown/inaccessible programs retain a generic icon and process name; a failed lookup is retried later. Icons and paths are not persisted or uploaded.

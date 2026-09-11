@@ -8,6 +8,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using System.Windows.Media;
+using System.Threading.Tasks;
 using BackgroundFerry.Core;
 using BackgroundFerry.Windows;
 using Microsoft.Win32;
@@ -19,7 +21,31 @@ namespace BackgroundFerry.App;
 public sealed class AppChoice : INotifyPropertyChanged
 {
     public string Process { get; init; } = "";
-    public string Name => Process + ".exe";
+    public string ProcessFile => Process + ".exe";
+    private string? displayName;
+    private ImageSource icon = AppIdentityReader.FallbackIcon;
+    public string Name => displayName ?? Process;
+    public ImageSource Icon => icon;
+    private int metadataProcessId;
+    private DateTime nextMetadataAttempt;
+    private bool metadataPending;
+    public async Task RefreshIdentityAsync(int processId)
+    {
+        if (metadataPending || (metadataProcessId == processId && DateTime.UtcNow < nextMetadataAttempt)) return;
+        metadataPending = true;
+        metadataProcessId = processId;
+        try
+        {
+            var identity = await Task.Run(() => AppIdentityReader.Read(processId, Process));
+            nextMetadataAttempt = DateTime.UtcNow.AddSeconds(identity is null ? 30 : 300);
+            if (identity is null) return;
+            displayName = identity.Name; icon = identity.Icon;
+            PropertyChanged?.Invoke(this, new(nameof(Name)));
+            PropertyChanged?.Invoke(this, new(nameof(Icon)));
+        }
+        catch (Exception ex) { Storage.Log(ex); nextMetadataAttempt = DateTime.UtcNow.AddSeconds(30); }
+        finally { metadataPending = false; }
+    }
     private bool selected;
     private bool canPrioritize = true;
     public bool Selected { get => selected; set { selected = value; PropertyChanged?.Invoke(this, new(nameof(Selected))); } }
@@ -159,7 +185,11 @@ public partial class MainWindow : Window
         if (++ticks % 10 != 0) return;
         loading = true;
         foreach (var level in engine.Levels)
-            if (!choices.Any(c => c.Process == level.Process)) choices.Add(new AppChoice { Process = level.Process });
+        {
+            var choice = choices.FirstOrDefault(c => c.Process == level.Process);
+            if (choice is null) { choice = new AppChoice { Process = level.Process }; choices.Add(choice); }
+            _ = choice.RefreshIdentityAsync(level.ProcessId);
+        }
         loading = false;
         UpdateChoices();
         var music = engine.Levels.FirstOrDefault(l => l.Process == (MusicPicker.SelectedItem as AppChoice)?.Process);

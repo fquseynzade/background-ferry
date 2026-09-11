@@ -6,7 +6,9 @@ A small Windows tray app that gently lowers your music while selected applicatio
 
 [Русский](README.ru.md) · [Architecture](docs/architecture.md) · [Contributing](CONTRIBUTING.md) · [Publish to GitHub](docs/github-publishing.md)
 
-**New in 0.2:** graphite/mint UI, persistent RU/EN, information tooltips, and an experimental [Chrome tab companion](docs/chrome-tabs.md). [Design concept](docs/design/README.md) · [Release notes](docs/release-0.2.md).
+**New in 0.2.1:** automatic application icons and readable names, site icons for selected Chrome tabs, graphite/mint UI, persistent RU/EN, information tooltips, and an experimental [Chrome tab companion](docs/chrome-tabs.md). [Design concept](docs/design/README.md) · [Release notes](docs/release-0.2.1.md).
+
+![Background Ferry 0.2.1 — real desktop interface](docs/screenshots/mixer-0.2.1.jpg)
 
 ## Quick start
 
@@ -17,7 +19,7 @@ A small Windows tray app that gently lowers your music while selected applicatio
 
 To stop, press **Stop mixing** or choose **Exit and restore volume** in the tray menu. `Ctrl+M` toggles mixing while the window is focused.
 
-Apps appear after they create an audio session. Saved choices remain available while the app is closed. Use separate apps in the desktop mixer. For individual tabs in Chrome, install the included companion from the Chrome tabs page.
+Apps appear after they create an audio session. Their names and icons are read from installed executables, including unfamiliar players; unavailable metadata falls back to a generic audio icon and the process name. Hover a source to see its executable name. Packaged or helper processes may expose generic metadata. Saved choices remain available while the app is closed. Use separate apps in the desktop mixer. For individual tabs in Chrome, install the included companion from the Chrome tabs page.
 
 ## Two listening modes
 

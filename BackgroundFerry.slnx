@@ -5,6 +5,7 @@
   <Project Path="src/BackgroundFerry.App/BackgroundFerry.App.csproj" />
  </Folder>
  <Folder Name="/tests/">
+  <Project Path="tests/BackgroundFerry.App.Tests/BackgroundFerry.App.Tests.csproj" />
   <Project Path="tests/BackgroundFerry.Tests/BackgroundFerry.Tests.csproj" />
   <Project Path="tests/BackgroundFerry.Integration/BackgroundFerry.Integration.csproj" />
   <Project Path="tests/FixtureMusic/FixtureMusic.csproj" />

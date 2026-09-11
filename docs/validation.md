@@ -1,4 +1,4 @@
-# Validation scope — 0.2.0
+# Validation scope — 0.2.1
 
 Validated locally on Windows x64 with .NET SDK 10.0.401. This is a first release, not a claim of universal compatibility with every audio driver or streaming service.
 
@@ -30,3 +30,7 @@ A real Playwright/Chromium harness is provided in `tests/chrome/browser.cjs`. It
 ## Not claimed
 
 No physical headphone-unplug test, ARM64 device test, Windows 10 device test, exclusive-mode test, speech recognition, or Spotify/Apple Music/YouTube service certification. Browser tab capture, latency, protected players, and recovery after browser/audio-device failures need manual validation.
+
+## 0.2.1 application identity
+
+Six additional app tests verify real EXE icon extraction, executable descriptions, frozen cross-thread image data, missing-file fallback, PID identity validation and exited processes. Desktop UI inspection showed native Chrome, AyuGram and WebView2 icons with readable names. Chrome favicons use the documented favicon API but remain pending a real-extension browser check.

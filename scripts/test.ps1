@@ -6,6 +6,8 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Build failed' }
     dotnet run --project tests/BackgroundFerry.Tests -c Release --no-build
     if ($LASTEXITCODE -ne 0) { throw 'Core tests failed' }
+    dotnet run --project tests/BackgroundFerry.App.Tests -c Release --no-build
+    if ($LASTEXITCODE -ne 0) { throw 'App identity tests failed' }
     if ($Chrome) {
         node --test tests/chrome/mix.test.mjs tests/chrome/offscreen.test.mjs
         if ($LASTEXITCODE -ne 0) { throw 'Chrome logic tests failed' }

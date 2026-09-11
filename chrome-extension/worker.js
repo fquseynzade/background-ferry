@@ -22,7 +22,7 @@ async function handle(message){
       const state=await call("STATE");
       if(state.sources.some(s=>s.tabId===tab.id))return call("ROLE",{tabId:tab.id,role:message.role});
       const streamId=await chrome.tabCapture.getMediaStreamId({targetTabId:tab.id});
-      return call("ADD",{streamId,tabId:tab.id,title:tab.title||"Tab",role:message.role,settings:saved});
+      return call("ADD",{streamId,tabId:tab.id,title:tab.title||"Tab",pageUrl:tab.url,role:message.role,settings:saved});
     }
     case "SETTINGS": {
       const settings=normalizeSettings(message.changes?{...saved,...message.changes}:message.settings);await chrome.storage.local.set({settings});

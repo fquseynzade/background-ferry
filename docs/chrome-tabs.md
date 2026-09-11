@@ -24,11 +24,13 @@ Closing the popup keeps the mix running. **Pause mixing** restores unity gain wh
 
 The extension works independently of the Windows app and keeps separate settings. Do not also duck Chrome through the desktop mixer.
 
+The favicon permission can show a broader Chrome permission warning. The implementation requests icons only for assigned tabs, holds their URLs only in the live capture state, and makes no requests to third-party icon services.
+
 ## Scope, permissions, and privacy
 
 - Chrome 116+ / Manifest V3. Protected/DRM players may not provide capturable audio; compatibility with individual streaming services is not certified.
 - The extension captures only tabs explicitly assigned through its action. It does not access the microphone, record files, contact servers, request service credentials, or scan browsing history.
-- `tabCapture` reads selected tab audio; `activeTab` provides temporary access after clicking the extension; `offscreen` hosts the local Web Audio graph; `storage` saves settings. No broad host permission is requested.
+- `tabCapture` reads selected tab audio; `activeTab` provides temporary access after clicking the extension; `offscreen` hosts the local Web Audio graph; `storage` saves settings; `favicon` provides Chrome-managed site icons for explicitly selected tabs. No broad host permission is requested.
 - Audio is streamed through a local Web Audio graph. Capture can add latency; check video synchronization with your device.
 - Changes inside a music site's own volume control remain effective. The extension multiplies the resulting signal; it does not overwrite the site's slider. Priority detection is sound-level based, not speech recognition.
 - Muting a captured tab can behave differently from muting its in-page player. Use the player's controls or release the tab. Normal playback restoration after a browser/audio-device failure needs a real-device check.

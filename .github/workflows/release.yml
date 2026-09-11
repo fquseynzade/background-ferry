@@ -28,4 +28,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
-        run: gh release create $env:GITHUB_REF_NAME artifacts/BackgroundFerry-win-x64.zip artifacts/BackgroundFerry-Chrome.zip artifacts/SHA256SUMS.txt --verify-tag --generate-notes --title "Background Ferry $env:GITHUB_REF_NAME"
+        run: gh release create $env:GITHUB_REF_NAME artifacts/BackgroundFerry-win-x64.zip artifacts/BackgroundFerry-Chrome.zip artifacts/SHA256SUMS.txt --verify-tag --notes-file docs/release-0.2.1.md --prerelease --title "Background Ferry $env:GITHUB_REF_NAME (Beta)"
